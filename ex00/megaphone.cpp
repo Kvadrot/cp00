@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:59:01 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/14 13:28:18 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/14 13:40:15 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void    ft_toUpperCase(std::string &str)
 {
-    for (int counter = 0; counter < str.size(); counter++)
+    for (size_t counter = 0; counter < str.size(); counter++)
     {
         str[counter] = std::toupper(str[counter]);
     }
