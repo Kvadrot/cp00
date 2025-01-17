@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:48:06 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/15 14:11:05 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/17 10:08:24 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,20 @@
 class PhoneBook {
 
     private:
+        int currentPhonebookSize;
         std::string test;
         Contact _contacts[MAX_CONTACTS];
         
     public:
     
     // Constructors:
-        PhoneBook(){};
-        ~PhoneBook(){};
+        PhoneBook();
+        ~PhoneBook();
     
     // Methods:
-        void ft_addContact(){};
-        void ft_searchContact(){};
+        void ft_addContact(const Contact& contact);
+        Contact* ft_getAllContacts();
+        // void ft_searchContact();
 };
 
 #endif

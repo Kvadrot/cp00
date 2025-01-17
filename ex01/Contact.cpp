@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 13:08:42 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/15 15:00:46 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/16 17:20:18 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,22 @@ Contact::~Contact()
 }
 
 //Methods:
-std::string  Contact::ft_getName(void) {
-    return (_first_name);
-}
+// std::string  Contact::ft_getName(void) {
+//     return (_first_name);
+// }
 
-std::string Contact:: ft_getLastName(void){
-    return (_lastName);
-}
+// std::string Contact:: ft_getLastName(void){
+//     return (_lastName);
+// }
 
-std::string Contact:: ft_getNickName(void){
-    return (_nickName);  
-}
+// std::string Contact:: ft_getNickName(void){
+//     return (_nickName);  
+// }
 
-std::string Contact:: ft_getPhoneNumber(void){
-    return (_phoneNumber);    
-}
+// std::string Contact:: ft_getPhoneNumber(void){
+//     return (_phoneNumber);    
+// }
 
-std::string Contact:: ft_getDarkestSecret(void){
-    return (_darkestSecret);
-}
+// std::string Contact:: ft_getDarkestSecret(void){
+//     return (_darkestSecret);
+// }

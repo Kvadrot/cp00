@@ -3,6 +3,7 @@ C++_FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 
 SRC = 	main.cpp\
 		Contact.cpp\
+		PhoneBook.cpp\
 
 OBJFILES = $(SRC:.cpp=.o)
 
