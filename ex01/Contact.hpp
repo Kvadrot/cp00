@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:48:08 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/16 17:19:52 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/17 13:36:25 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 class Contact {
 
     public:
+        int         _index;
         std::string _first_name;
         std::string _lastName;
         std::string _nickName;
@@ -27,15 +28,9 @@ class Contact {
 
         // Constructors
 		Contact();
-		Contact(std::string first_name, std::string last_name, std::string nick_name,
+		Contact(int index, std::string first_name, std::string last_name, std::string nick_name,
 			std::string phone_number, std::string darkest_secret);
 		~Contact();
-    
-        // std::string  ft_getName(void);
-        // std::string  ft_getLastName(void);
-        // std::string  ft_getNickName(void);
-        // std::string  ft_getPhoneNumber(void);
-        // std::string  ft_getDarkestSecret(void);
 };
 
 #endif

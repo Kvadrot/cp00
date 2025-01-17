@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:11:18 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/17 11:57:40 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/17 13:55:43 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,43 @@ static void ft_debugPrintContacts(PhoneBook& phonebook)
             std::cout << allContacts[i]._first_name << std::endl;
         }
     }
+}
+
+static void ft_printLimitedStr(std::string str, int limit)
+{
+    unsigned int convertedLimit = static_cast<unsigned int>(limit);
+
+    // If the string is longer than the limit, truncate it and add a dot
+    if (str.length() > convertedLimit)
+    {
+        str = str.substr(0, convertedLimit - 1) + ".";
+    }
+
+    // Calculate the number of spaces needed for right alignment
+    unsigned int spaces = convertedLimit - str.length();
+
+    // Print the spaces for right alignment
+    while (spaces > 0)
+    {
+        std::cout << " ";
+        spaces--;
+    }
+
+    // Print the string
+    std::cout << str;
+}
+
+static void ft_printContact(Contact contact)
+{
+    std::cout << "     index|first name| last name|  nickname\n";
+    ft_printLimitedStr(std::to_string(contact._index), COLOMN_WIDTH);
+    std::cout << "|";
+    ft_printLimitedStr(contact._first_name, COLOMN_WIDTH);
+    std::cout << "|";
+    ft_printLimitedStr(contact._lastName, COLOMN_WIDTH);
+    std::cout << "|";
+    ft_printLimitedStr(contact._nickName, COLOMN_WIDTH);
+    std::cout << std::endl;
 }
 
 bool isValidPhoneNumber(const std::string& input) {
@@ -81,16 +118,31 @@ static std::string ft_takeValidNumber(std::string message)
     return (input);
 }
 
-static void ft_searchContact(void)
+int ft_searchContact(PhoneBook &phonebook)
 {
-    std::cout << "search was triggered" << std::endl;
-    
+    std::string indexToFind;
+    int convertedInd;
+    Contact *contact;
+
+    indexToFind = ft_takeValidNumber("pls enter index you are searching for\n");
+    if (indexToFind == "")
+        return (1);
+    convertedInd = std::atoi(indexToFind.c_str());
+    contact = phonebook.ft_searchContact(convertedInd);
+
+    if (contact == NULL)
+    {
+        std::cout << "wrong contact id, you can try again" << std::endl; 
+        return (2);
+    }
+    ft_printContact(*contact);
+    return (0);
 }
 
 static int    ft_addContact(PhoneBook &phonebook)
 {
     Contact contact = Contact();
-    
+    contact._index = phonebook.ft_getCurrentPhonebookSize() + 1;
     contact._first_name = ft_readLine("enter, first_name:");
     if (contact._first_name == "")
         return (3);
@@ -134,7 +186,7 @@ int main(void)
                 return (2);
         }
         else if (command == "SEARCH") {
-            ft_searchContact();
+            ft_searchContact(phonebook);
         }
         else if (command == "EXIT")
             break;

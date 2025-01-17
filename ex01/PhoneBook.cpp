@@ -6,11 +6,13 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 17:09:34 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/17 11:20:43 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/17 14:04:29 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
+#include <cstdlib>
+#include <iostream>
 
 PhoneBook::PhoneBook(void)
 {
@@ -40,7 +42,22 @@ void PhoneBook::ft_addContact(const Contact& contact)
     }
 }
 
-Contact* PhoneBook::ft_getAllContacts(void)
+Contact *PhoneBook::ft_searchContact(int indexToFind)
+{
+    if (currentPhonebookSize > 0 && indexToFind < currentPhonebookSize)
+    {
+        return (&_contacts[indexToFind]);
+    } else {
+        return (NULL);
+    }
+}
+
+int PhoneBook::ft_getCurrentPhonebookSize(void)
+{
+    return (this->currentPhonebookSize);
+}
+
+Contact *PhoneBook::ft_getAllContacts(void)
 {
     return (_contacts);
 }
