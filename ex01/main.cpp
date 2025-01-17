@@ -6,13 +6,13 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:11:18 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/17 11:24:35 by ufo              ###   ########.fr       */
+/*   Updated: 2025/01/17 11:57:40 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "Contact.hpp"
 #include "PhoneBook.hpp"
-// #include "main.hpp"
 
 static void ft_debugPrintContacts(PhoneBook& phonebook)
 {
@@ -27,14 +27,57 @@ static void ft_debugPrintContacts(PhoneBook& phonebook)
     }
 }
 
+bool isValidPhoneNumber(const std::string& input) {
+    for (size_t i = 0; i < input.length(); ++i) {
+        char c = input[i];
+        // Check if the character is not a digit, space, or parenthesis
+        if (!(std::isdigit(c))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ft_isOnlyWhitespaceOrNonPrint(const std::string& input) {
+    for (size_t i = 0; i < input.length(); ++i) {
+        if (std::isprint(input[i]) && !std::isspace(input[i])) {
+            return false;
+        }
+    }
+    return true;
+}
 
 static std::string  ft_readLine(std::string message)
 {
     std::string input;
     
     std::cout << message << std::endl;
-    if (!(std::getline(std::cin, input)))
-        return ("");
+    while (1)
+    {
+        if (!(std::getline(std::cin, input)))
+            return ("");
+        if (ft_isOnlyWhitespaceOrNonPrint(input) == true)
+           std::cout << "The input contains only whitespace or non-printable characters. Try again" << std::endl;
+        else
+            break;
+    }
+    return (input);
+}
+
+static std::string ft_takeValidNumber(std::string message)
+{
+    std::string input;
+    while (1)
+    {
+        input = ft_readLine(message);
+        if (input == "")
+            return ("");
+        if (isValidPhoneNumber(input))
+            break;
+        else
+           std::cout << "The input must conatain only digits. Try again" << std::endl;  
+    }
+
     return (input);
 }
 
@@ -57,7 +100,7 @@ static int    ft_addContact(PhoneBook &phonebook)
 	contact._nickName = ft_readLine("Enter nick name: ");
     if (contact._nickName == "")
         return (5);
-	contact._phoneNumber = ft_readLine("Enter phone number: ");
+	contact._phoneNumber = ft_takeValidNumber("Enter phone number: ");
     if (contact._phoneNumber == "")
         return (6);
 	contact._darkestSecret = ft_readLine("Enter darkest secret: ");
@@ -73,7 +116,7 @@ int main(void)
     std::string command;
     PhoneBook phonebook = PhoneBook();
     
-    std::cout << "Type command to use Command, available commnds:";
+    std::cout << "Type command to use Command, available commnds:" << std::endl;
     std::cout << "ADD - create and add new contact to your phoneBook" << std::endl;
     std::cout << "SEARCH - display" << std::endl;
     std::cout << "EXIT - Terminate program" << std::endl;
