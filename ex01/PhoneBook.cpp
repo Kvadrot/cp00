@@ -3,61 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   PhoneBook.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: itykhono <itykhono@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 17:09:34 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/17 14:04:29 by ufo              ###   ########.fr       */
+/*   Updated: 2025/03/25 11:07:40 by itykhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
-#include <cstdlib>
-#include <iostream>
 
-PhoneBook::PhoneBook(void)
-{
-    currentPhonebookSize = 0;
+PhoneBook::PhoneBook() : _size(0), _oldestIndex(0) {}
+
+PhoneBook::~PhoneBook() {}
+
+void PhoneBook::addContact(const Contact& contact) {
+    _contacts[_oldestIndex] = contact;
+    _contacts[_oldestIndex].setIndex(_oldestIndex + 1); // Optional: set index internally
+    _oldestIndex = (_oldestIndex + 1) % MAX_CONTACTS;
+    if (_size < MAX_CONTACTS)
+        _size++;
 }
 
-PhoneBook::~PhoneBook(void)
-{
-    
+const Contact& PhoneBook::getContact(int index) const {
+    return _contacts[index];
 }
 
-void PhoneBook::ft_addContact(const Contact& contact)
-{
-    if (currentPhonebookSize < MAX_CONTACTS) 
-    {
-        _contacts[currentPhonebookSize] = contact;
-        currentPhonebookSize += 1;
-    } 
-    else 
-    {
-        // Shift all existing contacts to make space for the new one
-        for (int i = 1; i < MAX_CONTACTS; i++) 
-        {
-            _contacts[i - 1] = _contacts[i];
-        }
-        _contacts[MAX_CONTACTS - 1] = contact;
-    }
-}
-
-Contact *PhoneBook::ft_searchContact(int indexToFind)
-{
-    if (currentPhonebookSize > 0 && indexToFind < currentPhonebookSize)
-    {
-        return (&_contacts[indexToFind]);
-    } else {
-        return (NULL);
-    }
-}
-
-int PhoneBook::ft_getCurrentPhonebookSize(void)
-{
-    return (this->currentPhonebookSize);
-}
-
-Contact *PhoneBook::ft_getAllContacts(void)
-{
-    return (_contacts);
+int PhoneBook::getSize() const {
+    return _size;
 }

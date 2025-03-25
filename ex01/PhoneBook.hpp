@@ -3,44 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   PhoneBook.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: itykhono <itykhono@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:48:06 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/17 13:40:22 by ufo              ###   ########.fr       */
+/*   Updated: 2025/03/25 11:07:24 by itykhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHONEBOOK_HPP
-# define PHONEBOOK_HPP
+#define PHONEBOOK_HPP
 
-# include <iostream>
-# include <string>
-# include <iomanip>
-# include <ctime>
-# include "Contact.hpp"
+#include <iostream>
+#include "Contact.hpp"
 
-#define COLOMN_WIDTH 10
 #define MAX_CONTACTS 8
 
-
 class PhoneBook {
+private:
+    Contact _contacts[MAX_CONTACTS];
+    int     _size;          // number of contacts added (up to 8)
+    int     _oldestIndex;   // index to overwrite when full
 
-    private:
-        int currentPhonebookSize;
-        std::string test;
-        Contact _contacts[MAX_CONTACTS];
-        
-    public:
-    
-    // Constructors:
-        PhoneBook();
-        ~PhoneBook();
-    
-    // Methods:
-        void ft_addContact(const Contact& contact);
-        Contact *ft_searchContact(int indexToFind);
-        int ft_getCurrentPhonebookSize(void);
-        Contact *ft_getAllContacts();
+public:
+    PhoneBook();
+    ~PhoneBook();
+
+    void addContact(const Contact& contact);          // Add new contact (overwrite oldest if full)
+    const Contact& getContact(int index) const;       // Get contact by index (0 to size-1)
+    int getSize() const;                              // Return number of valid contacts
 };
 
 #endif
+

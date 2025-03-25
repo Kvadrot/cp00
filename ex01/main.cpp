@@ -3,197 +3,134 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: itykhono <itykhono@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:11:18 by ufo               #+#    #+#             */
-/*   Updated: 2025/01/17 13:55:43 by ufo              ###   ########.fr       */
+/*   Updated: 2025/03/25 11:32:28 by itykhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include "Contact.hpp"
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <cstdlib>
+#include <cctype>
 #include "PhoneBook.hpp"
 
-static void ft_debugPrintContacts(PhoneBook& phonebook)
-{
-    Contact *allContacts = phonebook.ft_getAllContacts();
-
-    for (int i = 0; i < MAX_CONTACTS - 1; i++)
-    {
-        if (!allContacts[i]._first_name.empty())
-        {
-            std::cout << allContacts[i]._first_name << std::endl;
-        }
-    }
-}
+#define COLUMN_WIDTH 10
+#include "Contact.hpp"
 
 static void ft_printLimitedStr(std::string str, int limit)
 {
-    unsigned int convertedLimit = static_cast<unsigned int>(limit);
-
-    // If the string is longer than the limit, truncate it and add a dot
-    if (str.length() > convertedLimit)
-    {
-        str = str.substr(0, convertedLimit - 1) + ".";
-    }
-
-    // Calculate the number of spaces needed for right alignment
-    unsigned int spaces = convertedLimit - str.length();
-
-    // Print the spaces for right alignment
-    while (spaces > 0)
-    {
-        std::cout << " ";
-        spaces--;
-    }
-
-    // Print the string
-    std::cout << str;
+    if (str.length() > (size_t)limit)
+        str = str.substr(0, limit - 1) + ".";
+    std::cout << std::setw(limit) << str;
 }
 
-static void ft_printContact(Contact contact)
+static void ft_printContactList(const PhoneBook &phonebook)
 {
-    std::cout << "     index|first name| last name|  nickname\n";
-    ft_printLimitedStr(std::to_string(contact._index), COLOMN_WIDTH);
-    std::cout << "|";
-    ft_printLimitedStr(contact._first_name, COLOMN_WIDTH);
-    std::cout << "|";
-    ft_printLimitedStr(contact._lastName, COLOMN_WIDTH);
-    std::cout << "|";
-    ft_printLimitedStr(contact._nickName, COLOMN_WIDTH);
-    std::cout << std::endl;
-}
-
-bool isValidPhoneNumber(const std::string& input) {
-    for (size_t i = 0; i < input.length(); ++i) {
-        char c = input[i];
-        // Check if the character is not a digit, space, or parenthesis
-        if (!(std::isdigit(c))) {
-            return false;
-        }
+    std::cout << "     Index|First Name| Last Name|  Nickname" << std::endl;
+    for (int i = 0; i < phonebook.getSize(); i++) {
+        const Contact &c = phonebook.getContact(i);
+        std::cout << std::setw(10) << c.getIndex() << "|";
+        ft_printLimitedStr(c.getFirstName(), COLUMN_WIDTH); std::cout << "|";
+        ft_printLimitedStr(c.getLastName(), COLUMN_WIDTH); std::cout << "|";
+        ft_printLimitedStr(c.getNickName(), COLUMN_WIDTH); std::cout << std::endl;
     }
-    return true;
 }
 
-bool ft_isOnlyWhitespaceOrNonPrint(const std::string& input) {
-    for (size_t i = 0; i < input.length(); ++i) {
-        if (std::isprint(input[i]) && !std::isspace(input[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
-static std::string  ft_readLine(std::string message)
+static std::string ft_readLine(std::string prompt)
 {
     std::string input;
-    
-    std::cout << message << std::endl;
-    while (1)
-    {
-        if (!(std::getline(std::cin, input)))
-            return ("");
-        if (ft_isOnlyWhitespaceOrNonPrint(input) == true)
-           std::cout << "The input contains only whitespace or non-printable characters. Try again" << std::endl;
-        else
-            break;
-    }
-    return (input);
+    std::cout << prompt;
+    std::getline(std::cin, input);
+    return input;
 }
 
 static std::string ft_takeValidNumber(std::string message)
 {
     std::string input;
-    while (1)
+    while (true)
     {
         input = ft_readLine(message);
-        if (input == "")
-            return ("");
-        if (isValidPhoneNumber(input))
-            break;
-        else
-           std::cout << "The input must conatain only digits. Try again" << std::endl;  
+        if (input.empty())
+            return "";
+        bool isDigitOnly = true;
+        for (size_t i = 0; i < input.length(); ++i) {
+            if (!std::isdigit(input[i])) {
+                isDigitOnly = false;
+                break;
+            }
+        }
+        if (isDigitOnly)
+            return input;
+        std::cout << "Invalid number. Try again." << std::endl;
     }
-
-    return (input);
 }
 
-int ft_searchContact(PhoneBook &phonebook)
+static int ft_addContact(PhoneBook &phonebook)
 {
-    std::string indexToFind;
-    int convertedInd;
-    Contact *contact;
+    Contact c;
+    c.setIndex(phonebook.getSize() + 1);
+    std::string s;
 
-    indexToFind = ft_takeValidNumber("pls enter index you are searching for\n");
-    if (indexToFind == "")
-        return (1);
-    convertedInd = std::atoi(indexToFind.c_str());
-    contact = phonebook.ft_searchContact(convertedInd);
+    if ((s = ft_readLine("First Name: ")).empty()) return (1);
+		c.setFirstName(s);
+    if ((s = ft_readLine("Last Name: ")).empty()) return (1);
+		c.setLastName(s);
+    if ((s = ft_readLine("Nickname: ")).empty()) return (1);
+		c.setNickName(s);
+    if ((s = ft_takeValidNumber("Phone Number: ")).empty()) return (1); 
+		c.setPhoneNumber(s);
+    if ((s = ft_readLine("Darkest Secret: ")).empty()) return (1);
+		c.setDarkestSecret(s);
 
-    if (contact == NULL)
-    {
-        std::cout << "wrong contact id, you can try again" << std::endl; 
-        return (2);
-    }
-    ft_printContact(*contact);
+    phonebook.addContact(c);
+    std::cout << "Contact added successfully!\n";
     return (0);
 }
 
-static int    ft_addContact(PhoneBook &phonebook)
+static int ft_searchContact(PhoneBook &phonebook)
 {
-    Contact contact = Contact();
-    contact._index = phonebook.ft_getCurrentPhonebookSize() + 1;
-    contact._first_name = ft_readLine("enter, first_name:");
-    if (contact._first_name == "")
-        return (3);
-    contact._lastName = ft_readLine("Enter last name: ");
-    if (contact._lastName == "")
-        return (4);
-	contact._nickName = ft_readLine("Enter nick name: ");
-    if (contact._nickName == "")
-        return (5);
-	contact._phoneNumber = ft_takeValidNumber("Enter phone number: ");
-    if (contact._phoneNumber == "")
-        return (6);
-	contact._darkestSecret = ft_readLine("Enter darkest secret: ");
-    if (contact._darkestSecret == "")
-        return (7);
-    phonebook.ft_addContact(contact);
-    std::cout << "contact is succefully added!" << std::endl;
-    return (0);
+    ft_printContactList(phonebook);
+    std::string indexStr = ft_takeValidNumber("Enter index: ");
+    if (indexStr.empty()) return 1;
+
+    int idx = std::atoi(indexStr.c_str());
+    if (idx < 1 || idx > phonebook.getSize()) {
+        std::cout << "Invalid index." << std::endl;
+        return 1;
+    }
+    const Contact &c = phonebook.getContact(idx - 1);
+    std::cout << "\nFull Contact Info:\n";
+    std::cout << "First Name: " << c.getFirstName() << std::endl;
+    std::cout << "Last Name: " << c.getLastName() << std::endl;
+    std::cout << "Nickname: " << c.getNickName() << std::endl;
+    std::cout << "Phone Number: " << c.getPhoneNumber() << std::endl;
+    std::cout << "Darkest Secret: " << c.getDarkestSecret() << std::endl;
+    return 0;
 }
 
-int main(void)
+int main()
 {
+    PhoneBook phonebook;
     std::string command;
-    PhoneBook phonebook = PhoneBook();
-    
-    std::cout << "Type command to use Command, available commnds:" << std::endl;
-    std::cout << "ADD - create and add new contact to your phoneBook" << std::endl;
-    std::cout << "SEARCH - display" << std::endl;
-    std::cout << "EXIT - Terminate program" << std::endl;
-    std::cout << "pls provide command" << std::endl;
-    
-    while (1)
+
+    std::cout << "Welcome to 80s PhoneBook! Commands: ADD, SEARCH, EXIT" << std::endl;
+    while (true)
     {
-        if (!(std::getline(std::cin, command)))
-        {
-            std::cout << "command readding error occured, pls try latter" << std::endl;
-            return (1);
-        }
+        std::cout << "\n> ";
+        std::getline(std::cin, command);
+
         if (command == "ADD") {
-            if (ft_addContact(phonebook) > 0)
-                return (2);
-        }
-        else if (command == "SEARCH") {
+            ft_addContact(phonebook);
+        } else if (command == "SEARCH") {
             ft_searchContact(phonebook);
-        }
-        else if (command == "EXIT")
+        } else if (command == "EXIT") {
             break;
-        else if (command == "test")
-            ft_debugPrintContacts(phonebook);
-        else
-            std::cout << "Wrong command, check up list of commands" << std::endl;
+        } else {
+            std::cout << "Unknown command. Use ADD, SEARCH or EXIT." << std::endl;
+        }
     }
-    return (0);
+    return 0;
 }
